@@ -21,6 +21,11 @@
         <h1 class="display-4">
             <%=title%>
         </h1>
+        <% if(errors) for(var i = 0; i < errors.length; i++){%>
+            <div class="alert alert-danger" role="alert">
+                <%= errors[i].msg %> 
+            </div>
+        <%}%>
 
     </div>
     <div class="container">
@@ -39,8 +44,8 @@
                     <input type="email" name="email" class="form-control" placeholder="Email address">
                     <label for="password" class="sr-only">Password</label>
                     <input type="password" name="password" class="form-control" placeholder="Password">
-                    <label for="passwordMatch" class="sr-only">CheckPassword</label>
-                    <input type="password" name="psswordMatch" class="form-control" placeholder="Retype Password">
+                    <label for="passwordMatch" class="sr-only">Password Match</label>
+                    <input type="password" name="passwordMatch" class="form-control" placeholder="Retype Password">
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                     <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
                 </form>
