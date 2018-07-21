@@ -70,3 +70,4 @@ hbs.registerHelper('json', function(context) {
 
 
 module.exports = app;
+// added comments
