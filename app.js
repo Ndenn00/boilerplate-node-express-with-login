@@ -10,11 +10,11 @@ var users = require('./routes/users');
 
 var app = express();
 
-require('dotenv').config();
+require('dotenv').config(); 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -70,4 +70,4 @@ hbs.registerHelper('json', function(context) {
 
 
 module.exports = app;
-// added comments
+
