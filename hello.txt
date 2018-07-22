@@ -42,6 +42,10 @@ Use authentication function in each router.get that you want to restrict
 
 Create login page add a post
 install passport-local
+see app.js for the local strategy
+
 
 Create logout button
+a get request to logout, with a redirect and session.destroy() 
 
+Dynamic render based on logged in vs logout 

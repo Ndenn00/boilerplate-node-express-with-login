@@ -24,6 +24,12 @@ router.get('/login', function (req, res) {
   });
 })
 
+router.get('/logout', function (req, res) {
+  req.logout();
+  req.session.destroy();
+  res.redirect('/');
+});
+
 router.post('/login', passport.authenticate( // finds strategy in app.js
   'local', {
     successRedirect: '/profile',

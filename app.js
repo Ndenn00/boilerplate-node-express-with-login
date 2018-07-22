@@ -54,6 +54,12 @@ app.use(session({ // creates a session var
 app.use(passport.initialize());
 app.use(passport.session());
 
+// for use in the ejs nav button (??) 
+app.use(function (req, res, next) {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  next();
+}); 
+
 // routes
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -67,21 +73,23 @@ passport.use(new LocalStrategy(
 
     const db = require('./db');
     db.query('SELECT id, password from user where username = ?', [username], function (err, results, fields) {
-      if (err) {
+      if (err) { // if mysql error 
         done(err)
       }; // mysql error 
-      if (results.length === 0) {
+      if (results.length === 0) { // if no lines returned
         done(null, false);
-      } // if no hits 
-
-      const hash = results[0].password.toString();
-      bcrypt.compare(password, hash, function (err, response) {
-        if (response === true) {
-          return done(null, {user_id: results[0].id});
-        } else {
-          return done(null, false)
-        }
-      });
+      } else {
+        const hash = results[0].password.toString(); // get hashed pword as a string 
+        bcrypt.compare(password, hash, function (err, response) {
+          if (response === true) {
+            return done(null, {
+              user_id: results[0].id
+            });
+          } else {
+            return done(null, false)
+          }
+        });
+      }
     })
   }
 ));
@@ -104,29 +112,5 @@ app.use(function (err, req, res, next) {
   res.render('error');
   console.log(err)
 });
-
-/*
-// Handlebars default config
-const hbs = require('hbs');
-const fs = require('fs');
-
-const partialsDir = __dirname + '/views/partials';
-
-const filenames = fs.readdirSync(partialsDir);
-
-filenames.forEach(function (filename) {
-  const matches = /^([^.]+).hbs$/.exec(filename);
-  if (!matches) {
-    return;
-  }
-  const name = matches[1];
-  const template = fs.readFileSync(partialsDir + '/' + filename, 'utf8');
-  hbs.registerPartial(name, template);
-});
-
-hbs.registerHelper('json', function(context) {
-    return JSON.stringify(context, null, 2);
-});
-*/
 
 module.exports = app;
