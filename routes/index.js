@@ -4,7 +4,14 @@ var expressValidator = require('express-validator');
 var bcrypt = require('bcrypt');
 const saltRounds = 10; // amount of plaintext rds to go through, higher=slower 
 
-/* GET home page. */
+
+router.get('/', function(req,res){
+  res.render('home', {
+    title: 'Home',
+    errors: undefined
+  });
+})
+
 router.get('/register', function (req, res, next) {
   res.render('register', {
     title: 'Register',
@@ -13,7 +20,6 @@ router.get('/register', function (req, res, next) {
 });
 
 router.post('/register', function (req, res, next) { // make a post request to register 
-
 
   // sort these out 
   req.checkBody('username', 'Username field cannot be empty.').notEmpty();
@@ -47,7 +53,7 @@ router.post('/register', function (req, res, next) { // make a post request to r
         if (error) console.log(error);
         // if db completes, render the reg page 
 
-        res.render('register', {
+        res.render('home', {
           title: 'Registration Complete',
           errors: undefined
         }); // end success render 

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>
+        <%=title%>
+    </title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+</head>
+
+<header class="masthead mb-auto">
+    <div class="inner">
+        <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/register">Register</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link" href="/login">Login</a>
+        </nav>
+    </div>
+</header>
+
+<body>
+    <div class="jumbotron text-center">
+        <h1 class="display-4">
+            <%=title%>
+        </h1>
+        <% if(errors) for(var i = 0; i < errors.length; i++){%>
+            <div class="alert alert-danger" role="alert">
+                <%= errors[i].msg %>
+            </div>
+            <%}%>
+
+    </div>
