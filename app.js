@@ -1,12 +1,13 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-var index = require('./routes/index');
-var users = require('./routes/users');
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
+var passport = require('passport');
 
 var app = express();
 
@@ -26,6 +27,30 @@ app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// session store options 
+var options = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database : process.env.DB_NAME
+};
+
+var sessionStore = new MySQLStore(options);
+
+// auth packages 
+app.use(session({ // creates a session var 
+  secret: 'kjksfksfsk', // random string 
+  resave: false, // only saves session when changes are made in backend 
+  store: sessionStore,
+  saveUninitialized: false // only for logged in, not visited 
+  // cookie: { secure: true } for https 
+})); 
+app.use(passport.initialize());
+app.use(passport.session());
+
+// routes
+var index = require('./routes/index');
+var users = require('./routes/users');
 app.use('/', index);
 app.use('/users', users);
 

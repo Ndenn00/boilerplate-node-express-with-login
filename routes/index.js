@@ -3,13 +3,34 @@ var router = express.Router();
 var expressValidator = require('express-validator');
 var bcrypt = require('bcrypt');
 const saltRounds = 10; // amount of plaintext rds to go through, higher=slower 
+var passport = require('passport');
 
 
 router.get('/', function(req,res){
+  console.log(req.user); // passport user 
+  console.log(req.isAuthenticated()); // passport authentication 
+
   res.render('home', {
     title: 'Home',
     errors: undefined
   });
+})
+
+router.get('/login', function(req,res){
+
+  res.render('login', {
+    title: 'Login',
+    errors: undefined
+  });
+})
+
+router.get('/profile', authenticationMiddleware(), function(req, res){
+  res.render('profile', {
+    title: 'Profile',
+    errors: undefined
+  });
+
+
 })
 
 router.get('/register', function (req, res, next) {
@@ -48,18 +69,42 @@ router.post('/register', function (req, res, next) { // make a post request to r
     bcrypt.hash(password, saltRounds, function (err, hash) {
       // Store hash in your password DB.
       const db = require('../db');
-
+      // insert user 
       db.query('insert into user (username, email, password) values(?, ?, ?)', [username, email, hash], function (error, results, fields) {
         if (error) console.log(error);
-        // if db completes, render the reg page 
+        
+        db.query('SELECT LAST_INSERT_ID() as user_id', function(error, result, fields){
+          if(error) console.log(error); 
 
-        res.render('home', {
-          title: 'Registration Complete',
-          errors: undefined
-        }); // end success render 
+          const user_id = result[0];
+
+          console.log(result[0]);
+          req.login(user_id, function(err){
+            res.redirect('/')
+          })
+        });
       }) // end insert 
     }); // end bcrypt
   } // end else 
 }); // end post 
+
+passport.serializeUser(function(user_id, done) {
+  done(null, user_id);
+});
+ 
+passport.deserializeUser(function(user_id, done) {
+    done(null, user_id);
+});
+
+// boilerplate middleware 
+// calls a req rers to test whether the person is authenticated 
+function authenticationMiddleware () {  
+	return (req, res, next) => {
+		console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
+
+	    if (req.isAuthenticated()) return next();
+	    res.redirect('/login')
+	}
+}
 
 module.exports = router;
