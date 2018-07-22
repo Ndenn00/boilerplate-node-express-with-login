@@ -5,12 +5,21 @@ Add our boilerplate
 Create a new user in the database
 1.x Create a form within a view 
 2.x Create route that'll process the form's post request
+
 3.x Create a database connection using .env file
+install npm mysql 
+db.query 
 4. Grab form input and insert into database
+
 5. Add express-validation package
 6. Validate user input on backend
+unique constraints in db 
 7. Validate user input on frontend
+install express-validator
+use req.checkbody() 
 8. Hash our user's password
+install bcrypt
+place insert into bcrypt.hash()
 9. Store user in database
 
 Login user (update user session, return auth cookie)

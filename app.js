@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-
 var index = require('./routes/index');
 var users = require('./routes/users');
 
@@ -49,7 +48,7 @@ app.use(function(err, req, res, next) {
   console.log(err)
 });
 
-
+/*
 // Handlebars default config
 const hbs = require('hbs');
 const fs = require('fs');
@@ -71,7 +70,7 @@ filenames.forEach(function (filename) {
 hbs.registerHelper('json', function(context) {
     return JSON.stringify(context, null, 2);
 });
-
+*/ 
 
 module.exports = app;
 

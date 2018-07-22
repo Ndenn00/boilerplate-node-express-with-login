@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var expressValidator = require('express-validator');
+var bcrypt = require('bcrypt');
+const saltRounds = 10; // amount of plaintext rds to go through, higher=slower 
 
 /* GET home page. */
 router.get('/register', function (req, res, next) {
@@ -37,18 +39,21 @@ router.post('/register', function (req, res, next) { // make a post request to r
     const email = req.body.email;
     const password = req.body.password;
 
-    const db = require('../db');
-    // are escape strings
-    db.query('insert into user (username, email, password) values(?, ?, ?)', [username, email, password], function (error, results, fields) {
-      if (error) console.log(error);
-      // if db completes, render the reg page 
+    bcrypt.hash(password, saltRounds, function (err, hash) {
+      // Store hash in your password DB.
+      const db = require('../db');
 
-      res.render('register', {
-        title: 'Registration Complete',
-        errors: undefined
-      });
-    })
-  }
-});
+      db.query('insert into user (username, email, password) values(?, ?, ?)', [username, email, hash], function (error, results, fields) {
+        if (error) console.log(error);
+        // if db completes, render the reg page 
+
+        res.render('register', {
+          title: 'Registration Complete',
+          errors: undefined
+        }); // end success render 
+      }) // end insert 
+    }); // end bcrypt
+  } // end else 
+}); // end post 
 
 module.exports = router;
