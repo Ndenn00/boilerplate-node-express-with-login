@@ -38,9 +38,10 @@ add a the authenticationMiddleware function to your route
 
 
 Protect routes and only permit entry with authorization cookie
-Use authentication function in each router.get that you want to 
-restrict 
+Use authentication function in each router.get that you want to restrict 
+
+Create login page add a post
+install passport-local
 
 Create logout button
 
-Create login page

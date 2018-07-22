@@ -6,7 +6,7 @@ const saltRounds = 10; // amount of plaintext rds to go through, higher=slower
 var passport = require('passport');
 
 
-router.get('/', function(req,res){
+router.get('/', function (req, res) {
   console.log(req.user); // passport user 
   console.log(req.isAuthenticated()); // passport authentication 
 
@@ -16,7 +16,7 @@ router.get('/', function(req,res){
   });
 })
 
-router.get('/login', function(req,res){
+router.get('/login', function (req, res) {
 
   res.render('login', {
     title: 'Login',
@@ -24,7 +24,13 @@ router.get('/login', function(req,res){
   });
 })
 
-router.get('/profile', authenticationMiddleware(), function(req, res){
+router.post('/login', passport.authenticate( // finds strategy in app.js
+  'local', {
+    successRedirect: '/profile',
+    failureRedirect: '/login'
+  }));
+
+router.get('/profile', authenticationMiddleware(), function (req, res) {
   res.render('profile', {
     title: 'Profile',
     errors: undefined
@@ -72,14 +78,14 @@ router.post('/register', function (req, res, next) { // make a post request to r
       // insert user 
       db.query('insert into user (username, email, password) values(?, ?, ?)', [username, email, hash], function (error, results, fields) {
         if (error) console.log(error);
-        
-        db.query('SELECT LAST_INSERT_ID() as user_id', function(error, result, fields){
-          if(error) console.log(error); 
+
+        db.query('SELECT LAST_INSERT_ID() as user_id', function (error, result, fields) {
+          if (error) console.log(error);
 
           const user_id = result[0];
 
           console.log(result[0]);
-          req.login(user_id, function(err){
+          req.login(user_id, function (err) {
             res.redirect('/')
           })
         });
@@ -88,23 +94,23 @@ router.post('/register', function (req, res, next) { // make a post request to r
   } // end else 
 }); // end post 
 
-passport.serializeUser(function(user_id, done) {
+passport.serializeUser(function (user_id, done) {
   done(null, user_id);
 });
- 
-passport.deserializeUser(function(user_id, done) {
-    done(null, user_id);
+
+passport.deserializeUser(function (user_id, done) {
+  done(null, user_id);
 });
 
 // boilerplate middleware 
 // calls a req rers to test whether the person is authenticated 
-function authenticationMiddleware () {  
-	return (req, res, next) => {
-		console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
+function authenticationMiddleware() {
+  return (req, res, next) => {
+    console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
 
-	    if (req.isAuthenticated()) return next();
-	    res.redirect('/login')
-	}
+    if (req.isAuthenticated()) return next();
+    res.redirect('/login')
+  }
 }
 
 module.exports = router;
